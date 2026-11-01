@@ -1,6 +1,7 @@
 from pathlib import Path
 from PIL import Image
 import subprocess
+import imageio_ffmpeg
 
 source_dir = Path("images")
 dest_dir = Path("videos")
@@ -14,7 +15,7 @@ for source in sorted(source_dir.glob("*.webp")):
         w, h = im.size
         w, h = w - w % 2, h - h % 2
         destination = dest_dir / f"{source.stem}.mp4"
-        cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
+        cmd = [imageio_ffmpeg.get_ffmpeg_exe(), "-hide_banner", "-loglevel", "error", "-y",
             "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{w}x{h}",
             "-r", str(fps), "-i", "pipe:0", "-an", "-c:v", "libx264",
             "-preset", "fast", "-crf", "23", "-pix_fmt", "yuv420p",
